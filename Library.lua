@@ -332,7 +332,7 @@ function library:new(props)
 		["labels"] = {},
 		["tabs"] = outline4,
 		["tabsbuttons"] = tabsbuttons,
-		["outline"] = outline,
+		["outline"] = color,
 		["pages"] = {},
 		["pointers"] = {},
 		["dropdowns"] = {},
