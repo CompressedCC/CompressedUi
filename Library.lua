@@ -360,12 +360,11 @@ function library:new(props)
 		}
 	}
 	
-	-- Insert UI parts into accent themeitems
+
 	table.insert(window.themeitems["accent"]["BackgroundColor3"], outline)
 	table.insert(window.themeitems["accent"]["BorderColor3"], outline4)
 	table.insert(window.themeitems["accent"]["TextColor3"], tabsbuttons)
 	
-	-- If you want the background (black) to theme the main holder or screen
 	table.insert(window.themeitems["background"]["BackgroundColor3"], holder)
 	table.insert(window.themeitems["background"]["BackgroundColor3"], screen)
 	
@@ -998,15 +997,17 @@ function library:page(props)
 			Position = UDim2.new(0,0,0,0),
 			AutomaticCanvasSize = "Y",
 			CanvasSize = UDim2.new(0,0,0,0),
-			ScrollBarImageTransparency = 1,
-			ScrollBarImageColor3 = Color3.fromRGB(0,0,0),
-			ScrollBarThickness = 0,
+			ScrollBarImageTransparency = 0, -- <--- changed
+			ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80) -- darker scroll bars
+
+			ScrollBarThickness = 6, -- <--- changed
 			ClipsDescendants = false,
 			VerticalScrollBarInset = "None",
 			VerticalScrollBarPosition = "Right",
 			Parent = pageholder
 		}
 	)
+	
 	--
 	utility.new(
 		"UIListLayout",
@@ -1018,24 +1019,26 @@ function library:page(props)
 	)
 	--
 	local right = utility.new(
-		"ScrollingFrame",
-		{
-			AnchorPoint = Vector2.new(1,0),
-			BackgroundTransparency = 1,
-			BorderSizePixel = 0,
-			Size = UDim2.new(0.5,-5,1,0),
-			Position = UDim2.new(1,0,0,0),
-			AutomaticCanvasSize = "Y",
-			CanvasSize = UDim2.new(0,0,0,0),
-			ScrollBarImageTransparency = 1,
-			ScrollBarImageColor3 = Color3.fromRGB(0,0,0),
-			ScrollBarThickness = 0,
-			ClipsDescendants = false,
-			VerticalScrollBarInset = "None",
-			VerticalScrollBarPosition = "Right",
-			Parent = pageholder
-		}
-	)
+    "ScrollingFrame",
+    {
+        AnchorPoint = Vector2.new(1,0),
+        BackgroundTransparency = 1,
+        BorderSizePixel = 0,
+        Size = UDim2.new(0.5,-5,1,0),
+        Position = UDim2.new(1,0,0,0),
+        AutomaticCanvasSize = "Y",
+        CanvasSize = UDim2.new(0,0,0,0),
+        ScrollBarImageTransparency = 0, -- <--- changed
+        ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80) -- darker scroll bars
+
+        ScrollBarThickness = 6, -- <--- changed
+        ClipsDescendants = false,
+        VerticalScrollBarInset = "None",
+        VerticalScrollBarPosition = "Right",
+        Parent = pageholder
+    }
+)
+
 	--
 	utility.new(
 		"UIListLayout",
