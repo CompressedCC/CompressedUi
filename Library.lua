@@ -967,17 +967,7 @@ function library:page(props)
 		}
 	)
 	--
-	local pageholder = utility.new(
-		"Frame",
-		{
-			AnchorPoint = Vector2.new(0.5,0.5),
-			BackgroundTransparency = 1,
-			Size = UDim2.new(1,-20,1,-20),
-			Position = UDim2.new(0.5,0,0.5,0),
-			Visible = false,
-			Parent = self.tabs
-		}
-	)
+
 	--
 	local left = utility.new(
 		"ScrollingFrame",
