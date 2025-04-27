@@ -322,56 +322,52 @@ function library:new(props)
 	)
 	--
 	utility.dragify(title,outline)
-	-- // window tbl
-	-- // window tbl
-	local color = Color3.fromRGB(200, 200, 255) -- Main accent color
-	local black = Color3.fromRGB(0, 0, 0) -- Secondary / background color
-	
-	local window = {
-		["screen"] = screen,
-		["holder"] = holder,
-		["labels"] = {},
-		["tabs"] = outline4,
-		["tabsbuttons"] = tabsbuttons,
-		["outline"] = color,
-		["pages"] = {},
-		["pointers"] = {},
-		["dropdowns"] = {},
-		["multiboxes"] = {},
-		["buttonboxs"] = {},
-		["colorpickers"] = {},
-		["x"] = true,
-		["y"] = true,
-		["key"] = Compressed.Main.MenuKey,
-		["textsize"] = textsize,
-		["font"] = font,
-		["theme"] = {
-			["accent"] = color,
-			["background"] = black
-		},
-		["themeitems"] = {
-			["accent"] = {
-				["BackgroundColor3"] = {},
-				["BorderColor3"] = {},
-				["TextColor3"] = {}
-			},
-			["background"] = {
-				["BackgroundColor3"] = {}
-			}
-		}
-	}
-	
+-- // Window Table
+local color = Color3.fromRGB(200, 200, 255) -- Main accent color
+local black = Color3.fromRGB(0, 0, 0) -- Secondary / background color
 
-	table.insert(window.themeitems["accent"]["BackgroundColor3"], outline)
-	table.insert(window.themeitems["accent"]["BorderColor3"], outline4)
-	table.insert(window.themeitems["accent"]["TextColor3"], tabsbuttons)
-	
-	-- If you want the background (black) to theme the main holder or screen
-	table.insert(window.themeitems["background"]["BackgroundColor3"], holder)
-	table.insert(window.themeitems["background"]["BackgroundColor3"], screen)
-	
-	--
-	table.insert(window.themeitems["accent"]["BackgroundColor3"],outline)
+local window = {
+    ["screen"] = screen,
+    ["holder"] = holder,
+    ["labels"] = {},
+    ["tabs"] = outline4,
+    ["tabsbuttons"] = tabsbuttons,
+    ["outline"] = color,
+    ["pages"] = {},
+    ["pointers"] = {},
+    ["dropdowns"] = {},
+    ["multiboxes"] = {},
+    ["buttonboxes"] = {}, -- fixed typo from "buttonboxs"
+    ["colorpickers"] = {},
+    ["x"] = true,
+    ["y"] = true,
+    ["key"] = Compressed.Main.MenuKey,
+    ["textsize"] = textsize,
+    ["font"] = font,
+    ["theme"] = {
+        ["accent"] = color,
+        ["background"] = black
+    },
+    ["themeitems"] = {
+        ["accent"] = {
+            ["BackgroundColor3"] = {},
+            ["BorderColor3"] = {},
+            ["TextColor3"] = {}
+        },
+        ["background"] = {
+            ["BackgroundColor3"] = {}
+        }
+    }
+}
+
+-- Insert items into themeitems correctly
+table.insert(window.themeitems["accent"]["BackgroundColor3"], outline)
+table.insert(window.themeitems["accent"]["BorderColor3"], outline4)
+table.insert(window.themeitems["accent"]["TextColor3"], tabsbuttons)
+
+table.insert(window.themeitems["background"]["BackgroundColor3"], holder)
+table.insert(window.themeitems["background"]["BackgroundColor3"], screen)
+
 	--
 	local toggled = true
 	local cooldown = false
