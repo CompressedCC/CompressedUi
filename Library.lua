@@ -312,7 +312,6 @@ function library:new(props)
 		}
 	)
 	--
-	
 	utility.new(
 		"UIListLayout",
 		{
@@ -883,70 +882,220 @@ function library:settextsize(size)
 end
 --
 function library:page(props)
-    props = props or {}
-
-    local tabbutton = utility.new("Frame", {
-        Size = UDim2.new(0, 80, 0, 30),
-        BackgroundTransparency = 1,
-        Parent = self.tabsbuttons,
-    })
-
-    local button = utility.new("TextButton", {
-        Size = UDim2.fromScale(1, 1),
-        BackgroundTransparency = 1,
-        TextColor3 = Color3.fromRGB(255, 255, 255),
-        Font = Enum.Font.Code,
-        TextSize = 16,
-        Text = props.name or "New Page",
-        Parent = tabbutton,
-    })
-
-    -- 💬 SCROLLABLE CONTAINER!
-    local tab = utility.new("ScrollingFrame", {
-        BackgroundTransparency = 1,
-        BorderSizePixel = 0,
-        ScrollBarThickness = 4,
-        CanvasSize = UDim2.new(0, 0, 0, 0), -- we'll auto-update this
-        Size = UDim2.new(1, 0, 1, 0),
-        Visible = false,
-        AutomaticCanvasSize = Enum.AutomaticSize.Y, -- 👈 important for auto-scrolling
-        ScrollBarImageColor3 = Color3.fromRGB(90, 90, 90),
-        Parent = self.tabs,
-    })
-
-    -- Layout to manage scrolling
-    local layout = utility.new("UIListLayout", {
-        Padding = UDim.new(0, 4),
-        SortOrder = Enum.SortOrder.LayoutOrder,
-        Parent = tab,
-    })
-
-    -- Optional: add some padding if you want
-    utility.new("UIPadding", {
-        PaddingTop = UDim.new(0, 6),
-        PaddingLeft = UDim.new(0, 6),
-        PaddingRight = UDim.new(0, 6),
-        PaddingBottom = UDim.new(0, 6),
-        Parent = tab,
-    })
-
-    table.insert(self.pages, tab)
-
-    button.MouseButton1Down:Connect(function()
-        for i,v in pairs(self.pages) do
-            v.Visible = false
-        end
-        tab.Visible = true
-    end)
-
-    return setmetatable({
-        tab = tab,
-        button = button,
-        layout = layout,
-        props = props,
-    }, {__index = library})
+	-- // properties
+	local name = props.name or props.Name or props.page or props.Page or props.pagename or props.Pagename or props.PageName or props.pageName or "new ui"
+	-- // variables
+	local page = {}
+	-- // main
+	local tabbutton = utility.new(
+		"Frame",
+		{
+			BackgroundColor3 = Color3.fromRGB(20, 20, 20),
+			BorderColor3 = Color3.fromRGB(12, 12, 12),
+			BorderMode = "Inset",
+			BorderSizePixel = 1,
+			Size = UDim2.new(0,75,1,0),
+			Parent = self.tabsbuttons
+		}
+	)
+	--
+	local outline = utility.new(
+		"Frame",
+		{
+			BackgroundColor3 = Color3.fromRGB(24, 24, 24),
+			BorderColor3 = Color3.fromRGB(56, 56, 56),
+			BorderMode = "Inset",
+			BorderSizePixel = 1,
+			Size = UDim2.new(1,0,1,0),
+			Position = UDim2.new(0,0,0,0),
+			Parent = tabbutton
+		}
+	)
+	--
+	local button = utility.new(
+		"TextButton",
+		{
+			AnchorPoint = Vector2.new(0,0),
+			BackgroundTransparency = 1,
+			Size = UDim2.new(1,0,1,0),
+			Position = UDim2.new(0,0,0,0),
+			Text = "",
+			Parent = tabbutton
+		}
+	)
+	--
+	local r_line = utility.new(
+		"Frame",
+		{
+			BackgroundColor3 = Color3.fromRGB(56, 56, 56),
+			BorderSizePixel = 0,
+			Size = UDim2.new(0,1,0,1),
+			Position = UDim2.new(1,0,1,1),
+			ZIndex = 2,
+			Parent = outline
+		}
+	)
+	--
+	local l_line = utility.new(
+		"Frame",
+		{
+			AnchorPoint = Vector2.new(1,0),
+			BackgroundColor3 = Color3.fromRGB(56, 56, 56),
+			BorderSizePixel = 0,
+			Size = UDim2.new(0,1,0,1),
+			Position = UDim2.new(0,0,1,1),
+			ZIndex = 2,
+			Parent = outline
+		}
+	)
+	--
+	local line = utility.new(
+		"Frame",
+		{
+			BackgroundColor3 = Color3.fromRGB(24, 24, 24),
+			BorderSizePixel = 0,
+			Size = UDim2.new(1,0,0,2),
+			Position = UDim2.new(0,0,1,0),
+			ZIndex = 2,
+			Parent = outline
+		}
+	)
+	--
+	local label = utility.new(
+		"TextLabel",
+		{
+			BackgroundTransparency = 1,
+			Size = UDim2.new(1,0,0,20),
+			Position = UDim2.new(0,0,0,0),
+			Font = self.font,
+			Text = name,
+			TextColor3 = Color3.fromRGB(255,255,255),
+			TextSize = self.textsize,
+			TextStrokeTransparency = 0,
+			Parent = outline
+		}
+	)
+	--
+	local pageholder = utility.new(
+		"Frame",
+		{
+			AnchorPoint = Vector2.new(0.5,0.5),
+			BackgroundTransparency = 1,
+			Size = UDim2.new(1,-20,1,-20),
+			Position = UDim2.new(0.5,0,0.5,0),
+			Visible = false,
+			Parent = self.tabs
+		}
+	)
+	--
+	local left = utility.new(
+		"ScrollingFrame",
+		{
+			BackgroundTransparency = 1,
+			BorderSizePixel = 0,
+			Size = UDim2.new(0.5,-5,1,0),
+			Position = UDim2.new(0,0,0,0),
+			AutomaticCanvasSize = "Y",
+			CanvasSize = UDim2.new(0,0,0,0),
+			ScrollBarImageTransparency = 0, -- <--- changed
+			ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100), -- optional nice gray color
+			ScrollBarThickness = 6, -- <--- changed
+			ClipsDescendants = false,
+			VerticalScrollBarInset = "None",
+			VerticalScrollBarPosition = "Right",
+			Parent = pageholder
+		}
+	)	
+	--
+	utility.new(
+		"UIListLayout",
+		{
+			FillDirection = "Vertical",
+			Padding = UDim.new(0,10),
+			Parent = left
+		}
+	)
+	--
+	local right = utility.new(
+		"ScrollingFrame",
+		{
+			AnchorPoint = Vector2.new(1,0),
+			BackgroundTransparency = 1,
+			BorderSizePixel = 0,
+			Size = UDim2.new(0.5,-5,1,0),
+			Position = UDim2.new(1,0,0,0),
+			AutomaticCanvasSize = "Y",
+			CanvasSize = UDim2.new(0,0,0,0),
+			ScrollBarImageTransparency = 0, -- <--- changed
+			ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100), -- optional
+			ScrollBarThickness = 6, -- <--- changed
+			ClipsDescendants = false,
+			VerticalScrollBarInset = "None",
+			VerticalScrollBarPosition = "Right",
+			Parent = pageholder
+		}
+	)
+	
+	--
+	utility.new(
+		"UIListLayout",
+		{
+			FillDirection = "Vertical",
+			Padding = UDim.new(0,10),
+			Parent = right
+		}
+	)
+	-- // page tbl
+	page = {
+		["library"] = self,
+		["outline"] = outline,
+		["r_line"] = r_line,
+		["l_line"] = l_line,
+		["line"] = line,
+		["page"] = pageholder,
+		["left"] = left,
+		["right"] = right,
+		["open"] = false,
+		["pointers"] = {}
+	}
+	--
+	table.insert(self.pages,page)
+	--
+	button.MouseButton1Down:Connect(function()
+		if page.open == false then
+			for i,v in pairs(self.pages) do
+				if v ~= page then
+					if v.open then
+						v.page.Visible = false
+						v.open = false
+						v.outline.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+						v.line.Size = UDim2.new(1,0,0,2)
+						v.line.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+					end
+				end
+			end
+			--
+			self:closewindows()
+			--
+			page.page.Visible = true
+			page.open = true
+			page.outline.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+			page.line.Size = UDim2.new(1,0,0,3)
+			page.line.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+		end
+	end)
+	--
+	local pointer = props.pointer or props.Pointer or props.pointername or props.Pointername or props.PointerName or props.pointerName or nil
+	--
+	if pointer then
+		self.pointers[tostring(pointer)] = page.pointers
+	end
+	--
+	self.labels[#self.labels+1] = label
+	-- // metatable indexing + return
+	setmetatable(page, pages)
+	return page
 end
-
 --
 function pages:openpage()
 	local page = self
