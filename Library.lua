@@ -330,7 +330,7 @@ function library:new(props)
 		["screen"] = screen,
 		["holder"] = holder,
 		["labels"] = {},
-		["tabs"] = color,
+		["tabs"] = outline4,
 		["tabsbuttons"] = tabsbuttons,
 		["outline"] = color,
 		["pages"] = {},
@@ -1016,26 +1016,26 @@ function library:page(props)
 		}
 	)
 	--
-	local right = utility.new(
-		"ScrollingFrame",
-		{
-			AnchorPoint = Vector2.new(1,0),
-			BackgroundTransparency = 1,
-			BorderSizePixel = 0,
-			Size = UDim2.new(0.5,-5,1,0),
-			Position = UDim2.new(1,0,0,0),
-			AutomaticCanvasSize = "Y",
-			CanvasSize = UDim2.new(0,0,0,0),
-			ScrollBarImageTransparency = 0, -- <--- changed
-			ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100), -- optional
-			ScrollBarThickness = 6, -- <--- changed
-			ClipsDescendants = false,
-			VerticalScrollBarInset = "None",
-			VerticalScrollBarPosition = "Right",
-			Parent = pageholder
-		}
-	)
-	
+local right = utility.new(
+    "ScrollingFrame",
+    {
+        AnchorPoint = Vector2.new(1,0),
+        BackgroundTransparency = 1,
+        BorderSizePixel = 0,
+        Size = UDim2.new(0.5,-5,1,0),
+        Position = UDim2.new(1,0,0,0),
+        AutomaticCanvasSize = "Y",
+        CanvasSize = UDim2.new(0,0,0,0),
+        ScrollBarImageTransparency = 0, -- <--- changed
+        ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100), -- optional
+        ScrollBarThickness = 6, -- <--- changed
+        ClipsDescendants = false,
+        VerticalScrollBarInset = "None",
+        VerticalScrollBarPosition = "Right",
+        Parent = pageholder
+    }
+)
+
 	--
 	utility.new(
 		"UIListLayout",
