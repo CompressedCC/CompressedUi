@@ -312,45 +312,7 @@ function library:new(props)
 		}
 	)
 	--
-	local resizer = utility.new(
-    "Frame",
-    {
-        AnchorPoint = Vector2.new(1, 1),
-        BackgroundTransparency = 1, -- make it invisible
-        Size = UDim2.new(0, 10, 0, 10),
-        Position = UDim2.new(1, -2, 1, -2),
-        ZIndex = 10, -- make sure it's clickable
-        Parent = outline
-    }
-)
---
-local resizing = false
-local startPos, startSize
-
-resizer.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        resizing = true
-        startPos = uis:GetMouseLocation()
-        startSize = outline.Size
-    end
-end)
-
-uis.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        resizing = false
-    end
-end)
-
-uis.InputChanged:Connect(function(input)
-    if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
-        local delta = uis:GetMouseLocation() - startPos
-        outline.Size = UDim2.new(
-            0, math.clamp(startSize.X.Offset + delta.X, 200, 1000), -- minimum 200, max 1000 width
-            0, math.clamp(startSize.Y.Offset + delta.Y, 200, 1000)  -- minimum 200, max 1000 height
-        )
-    end
-end)
---
+	
 	utility.new(
 		"UIListLayout",
 		{
@@ -369,7 +331,7 @@ end)
 		["screen"] = screen,
 		["holder"] = holder,
 		["labels"] = {},
-		["tabs"] = outline4,
+		["tabs"] = color,
 		["tabsbuttons"] = tabsbuttons,
 		["outline"] = color,
 		["pages"] = {},
