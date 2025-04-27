@@ -323,16 +323,13 @@ function library:new(props)
 	--
 	utility.dragify(title,outline)
 	-- // window tbl
-	local color = Color3.fromRGB(200, 200, 255) -- Main accent color
-	local black = Color3.fromRGB(0, 0, 0) -- Secondary / background color
-	
-	local window = {
+	window = {
 		["screen"] = screen,
 		["holder"] = holder,
 		["labels"] = {},
 		["tabs"] = outline4,
 		["tabsbuttons"] = tabsbuttons,
-		["outline"] = color,
+		["outline"] = outline,
 		["pages"] = {},
 		["pointers"] = {},
 		["dropdowns"] = {},
@@ -341,21 +338,17 @@ function library:new(props)
 		["colorpickers"] = {},
 		["x"] = true,
 		["y"] = true,
-		["key"] = Compressed.Main.MenuKey,
+		["key"] = Enum.KeyCode.RightShift,
 		["textsize"] = textsize,
 		["font"] = font,
 		["theme"] = {
-			["accent"] = color,
-			["background"] = black
+			["accent"] = color
 		},
 		["themeitems"] = {
 			["accent"] = {
 				["BackgroundColor3"] = {},
 				["BorderColor3"] = {},
 				["TextColor3"] = {}
-			},
-			["background"] = {
-				["BackgroundColor3"] = {}
 			}
 		}
 	}
@@ -967,7 +960,17 @@ function library:page(props)
 		}
 	)
 	--
-
+	local pageholder = utility.new(
+		"Frame",
+		{
+			AnchorPoint = Vector2.new(0.5,0.5),
+			BackgroundTransparency = 1,
+			Size = UDim2.new(1,-20,1,-20),
+			Position = UDim2.new(0.5,0,0.5,0),
+			Visible = false,
+			Parent = self.tabs
+		}
+	)
 	--
 	local left = utility.new(
 		"ScrollingFrame",
