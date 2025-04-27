@@ -998,7 +998,7 @@ function library:page(props)
 			AutomaticCanvasSize = "Y",
 			CanvasSize = UDim2.new(0,0,0,0),
 			ScrollBarImageTransparency = 0, -- <--- changed
-			ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80) -- darker scroll bars
+			ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80), -- darker scroll bars
 
 			ScrollBarThickness = 6, -- <--- changed
 			ClipsDescendants = false,
@@ -1029,7 +1029,7 @@ function library:page(props)
         AutomaticCanvasSize = "Y",
         CanvasSize = UDim2.new(0,0,0,0),
         ScrollBarImageTransparency = 0, -- <--- changed
-        ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80) -- darker scroll bars
+        ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80), -- darker scroll bars
 
         ScrollBarThickness = 6, -- <--- changed
         ClipsDescendants = false,
