@@ -359,15 +359,6 @@ function library:new(props)
 			}
 		}
 	}
-	
-
-	table.insert(window.themeitems["accent"]["BackgroundColor3"], outline)
-	table.insert(window.themeitems["accent"]["BorderColor3"], outline4)
-	table.insert(window.themeitems["accent"]["TextColor3"], tabsbuttons)
-	
-	table.insert(window.themeitems["background"]["BackgroundColor3"], holder)
-	table.insert(window.themeitems["background"]["BackgroundColor3"], screen)
-	
 	--
 	table.insert(window.themeitems["accent"]["BackgroundColor3"],outline)
 	--
