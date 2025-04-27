@@ -330,7 +330,7 @@ function library:new(props)
 		["screen"] = screen,
 		["holder"] = holder,
 		["labels"] = {},
-		["tabs"] = color,
+		["tabs"] = outline4,
 		["tabsbuttons"] = tabsbuttons,
 		["outline"] = color,
 		["pages"] = {},
