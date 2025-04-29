@@ -209,6 +209,44 @@ function library:new(props)
 		}
 	)
 	--
+	local resizeHandle = utility.new("Frame", {
+		AnchorPoint = Vector2.new(1, 1),
+		BackgroundColor3 = Color3.fromRGB(50, 50, 50),
+		Size = UDim2.new(0, 10, 0, 10),
+		Position = UDim2.new(1, -1, 1, -1),
+		BorderSizePixel = 0,
+		Parent = outline
+	})
+
+	--
+	local resizing = false
+local dragStart
+local startSize
+
+resizeHandle.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        resizing = true
+        dragStart = input.Position
+        startSize = outline.Size
+    end
+end)
+
+resizeHandle.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        resizing = false
+    end
+end)
+
+uis.InputChanged:Connect(function(input)
+    if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - dragStart
+        outline.Size = UDim2.new(
+            startSize.X.Scale, math.clamp(startSize.X.Offset + delta.X, 200, 1000), -- min 200, max 1000 width
+            startSize.Y.Scale, math.clamp(startSize.Y.Offset + delta.Y, 200, 1000)  -- min 200, max 1000 height
+        )
+    end
+end)
+
 	local title = utility.new(
 		"Frame",
 		{
