@@ -241,8 +241,8 @@ uis.InputChanged:Connect(function(input)
     if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
         local delta = input.Position - dragStart
         outline.Size = UDim2.new(
-            startSize.X.Scale, math.clamp(startSize.X.Offset + delta.X, 200, 1000), -- min 200, max 1000 width
-            startSize.Y.Scale, math.clamp(startSize.Y.Offset + delta.Y, 200, 1000)  -- min 200, max 1000 height
+            startSize.X.Scale, math.clamp(startSize.X.Offset + delta.X, 200, 5000), -- min 200, max 1000 width
+            startSize.Y.Scale, math.clamp(startSize.Y.Offset + delta.Y, 200, 5000)  -- min 200, max 1000 height
         )
     end
 end)
