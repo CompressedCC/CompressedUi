@@ -2366,6 +2366,99 @@ function sections:dropdown(props)
 	return dropdown
 end
 --
+function sections:multidropdown(props)
+	-- // properties
+	local name = props.name or "new ui"
+	local def = props.def or {} -- default is now a table
+	local max = props.max or 4
+	local options = props.options or {}
+	local callback = props.callback or function() end
+
+	-- // variables
+	local dropdown = {}
+	local selected = {} -- selected values
+
+	-- // GUI setup (same as original)
+	local dropdownholder = utility.new("Frame", { BackgroundTransparency = 1, Size = UDim2.new(1,0,0,35), ZIndex = 2, Parent = self.content })
+	local outline = utility.new("Frame", { BackgroundColor3 = Color3.fromRGB(24, 24, 24), BorderColor3 = Color3.fromRGB(12, 12, 12), BorderMode = "Inset", BorderSizePixel = 1, Size = UDim2.new(1,0,0,20), Position = UDim2.new(0,0,0,15), Parent = dropdownholder })
+	local outline2 = utility.new("Frame", { BackgroundColor3 = Color3.fromRGB(24, 24, 24), BorderColor3 = Color3.fromRGB(56, 56, 56), BorderMode = "Inset", BorderSizePixel = 1, Size = UDim2.new(1,0,1,0), Position = UDim2.new(0,0,0,0), Parent = outline })
+	local color = utility.new("Frame", { BackgroundColor3 = Color3.fromRGB(30, 30, 30), BorderSizePixel = 0, Size = UDim2.new(1,0,1,0), Position = UDim2.new(0,0,0,0), Parent = outline2 })
+	utility.new("UIGradient", { Color = ColorSequence.new{ColorSequenceKeypoint.new(0.00, Color3.fromRGB(199, 191, 204)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))}, Rotation = 90, Parent = color })
+
+	local value = utility.new("TextLabel", { BackgroundTransparency = 1, Size = UDim2.new(1,-20,1,0), Position = UDim2.new(0,5,0,0), Font = self.library.font, Text = table.concat(def, ", "), TextColor3 = Color3.fromRGB(255,255,255), TextSize = self.library.textsize, TextStrokeTransparency = 0, TextXAlignment = "Left", ClipsDescendants = true, Parent = outline })
+	local indicator = utility.new("TextLabel", { AnchorPoint = Vector2.new(0.5,0), BackgroundTransparency = 1, Size = UDim2.new(1,-10,1,0), Position = UDim2.new(0.5,0,0,0), Font = self.library.font, Text = "+", TextColor3 = Color3.fromRGB(255,255,255), TextSize = self.library.textsize, TextStrokeTransparency = 0, TextXAlignment = "Right", ClipsDescendants = true, Parent = outline })
+	local title = utility.new("TextLabel", { BackgroundTransparency = 1, Size = UDim2.new(1,0,0,15), Position = UDim2.new(0,0,0,0), Font = self.library.font, Text = name, TextColor3 = Color3.fromRGB(255,255,255), TextSize = self.library.textsize, TextStrokeTransparency = 0, TextXAlignment = "Left", Parent = dropdownholder })
+
+	local dropdownbutton = utility.new("TextButton", { BackgroundTransparency = 1, Size = UDim2.new(1,0,1,0), Position = UDim2.new(0,0,0,0), Text = "", Parent = dropdownholder })
+	local optionsholder = utility.new("Frame", { BackgroundTransparency = 1, BorderColor3 = Color3.fromRGB(56, 56, 56), BorderMode = "Inset", BorderSizePixel = 1, Size = UDim2.new(1,0,0,20), Position = UDim2.new(0,0,0,34), Visible = false, Parent = dropdownholder })
+
+	local size = math.clamp(#options, 1, max)
+	local optionsoutline = utility.new("ScrollingFrame", { BackgroundColor3 = Color3.fromRGB(56, 56, 56), BorderColor3 = Color3.fromRGB(56, 56, 56), BorderMode = "Inset", BorderSizePixel = 1, Size = UDim2.new(1,0,size,2), Position = UDim2.new(0,0,0,0), ClipsDescendants = true, CanvasSize = UDim2.new(0,0,0,18*#options), ScrollBarImageTransparency = 0.25, ScrollBarImageColor3 = Color3.fromRGB(0,0,0), ScrollBarThickness = 5, VerticalScrollBarInset = "ScrollBar", VerticalScrollBarPosition = "Right", ZIndex = 5, Parent = optionsholder })
+	utility.new("UIListLayout", { FillDirection = "Vertical", Parent = optionsoutline })
+
+	-- // multi-dropdown object
+	dropdown = {
+		["library"] = self.library,
+		["optionsholder"] = optionsholder,
+		["indicator"] = indicator,
+		["options"] = options,
+		["title"] = title,
+		["value"] = value,
+		["open"] = false,
+		["titles"] = {},
+		["current"] = def,
+		["callback"] = callback
+	}
+
+	-- // Store initial selections
+	for _,v in pairs(def) do selected[v] = true end
+
+	-- // Options
+	for i,v in pairs(options) do
+		local ddoptionbutton = utility.new("TextButton", { BackgroundTransparency = 1, Size = UDim2.new(1,0,0,18), Text = "", ZIndex = 6, Parent = optionsoutline })
+		local ddoptiontitle = utility.new("TextLabel", { BackgroundTransparency = 1, Size = UDim2.new(1,-10,1,0), Position = UDim2.new(0.5,0,0,0), AnchorPoint = Vector2.new(0.5,0), Font = self.library.font, Text = v, TextColor3 = selected[v] and self.library.theme.accent or Color3.fromRGB(255,255,255), TextSize = self.library.textsize, TextStrokeTransparency = 0, TextXAlignment = "Left", ClipsDescendants = true, ZIndex = 6, Parent = ddoptionbutton })
+
+		table.insert(dropdown.titles, ddoptiontitle)
+
+		ddoptionbutton.MouseButton1Down:Connect(function()
+			if selected[v] then
+				selected[v] = nil
+				ddoptiontitle.TextColor3 = Color3.fromRGB(255,255,255)
+			else
+				selected[v] = true
+				ddoptiontitle.TextColor3 = self.library.theme.accent
+			end
+			-- update text
+			local currentList = {}
+			for option, state in pairs(selected) do
+				if state then table.insert(currentList, option) end
+			end
+			dropdown.current = currentList
+			dropdown.value.Text = table.concat(currentList, ", ")
+			dropdown.callback(currentList)
+		end)
+	end
+
+	-- // Toggle open/close
+	dropdownbutton.MouseButton1Down:Connect(function()
+		dropdown.library:closewindows(dropdown)
+		optionsholder.Visible = not dropdown.open
+		dropdown.open = not dropdown.open
+		indicator.Text = dropdown.open and "-" or "+"
+	end)
+
+	-- // Pointer support
+	if props.pointer then
+		self.pointers[tostring(props.pointer)] = dropdown
+	end
+
+	self.library.labels[#self.library.labels+1] = title
+	self.library.labels[#self.library.labels+1] = value
+
+	setmetatable(dropdown, dropdowns)
+	return dropdown
+end
+--
 function sections:buttonbox(props)
 	-- // properties
 	local name = props.name or props.Name or props.page or props.Page or props.pagename or props.Pagename or props.PageName or props.pageName or "new ui"
