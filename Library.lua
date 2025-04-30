@@ -1396,7 +1396,91 @@ function pages:multisection(props)
 	setmetatable(multisection,multisections)
 	return multisection
 end
---
+--function pages:subpage(props)
+	local name = props.name or props.Name or props.subpage or props.Subpage or "new subpage"
+	local side = props.side or "left" -- "left" or "right"
+	local parent = (side == "right" and self.right) or self.left
+
+	local subpage = {}
+	local subpages = self.subpages or {}
+	self.subpages = subpages
+
+	local tabHolder = self.subTabHolder
+	if not tabHolder then
+		tabHolder = utility.new("Frame", {
+			Size = UDim2.new(1, 0, 0, 20),
+			BackgroundTransparency = 1,
+			Parent = parent,
+		})
+
+		self.subTabHolder = tabHolder
+	end
+
+	local contentHolder = self.subPageHolder
+	if not contentHolder then
+		contentHolder = utility.new("Frame", {
+			Size = UDim2.new(1, 0, 1, -20),
+			Position = UDim2.new(0, 0, 0, 20),
+			BackgroundTransparency = 1,
+			ClipsDescendants = true,
+			Parent = parent,
+		})
+
+		self.subPageHolder = contentHolder
+	end
+
+	local button = utility.new("TextButton", {
+		Text = name,
+		Size = UDim2.new(0, 80, 1, 0),
+		BackgroundColor3 = Color3.fromRGB(35, 35, 35),
+		TextColor3 = Color3.fromRGB(255, 255, 255),
+		Font = self.font,
+		TextSize = self.textsize,
+		Parent = tabHolder
+	})
+
+	local layout = tabHolder:FindFirstChildOfClass("UIListLayout") or utility.new("UIListLayout", {
+		FillDirection = Enum.FillDirection.Horizontal,
+		Padding = UDim.new(0, 5),
+		Parent = tabHolder,
+	})
+
+	local frame = utility.new("Frame", {
+		Size = UDim2.new(1, 0, 1, 0),
+		Visible = false,
+		BackgroundTransparency = 1,
+		Parent = contentHolder
+	})
+
+	button.MouseButton1Down:Connect(function()
+		for _, sub in pairs(subpages) do
+			sub.frame.Visible = false
+			sub.button.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+		end
+		frame.Visible = true
+		button.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	end)
+
+	table.insert(subpages, {
+		name = name,
+		frame = frame,
+		button = button
+	})
+
+	-- Automatically open first created subpage
+	if #subpages == 1 then
+		frame.Visible = true
+		button.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	end
+
+	subpage.frame = frame
+	subpage.button = button
+	subpage.parentPage = self
+
+	setmetatable(subpage, { __index = pages }) -- allow same structure
+	return subpage
+end
+
 function multisections:section(props)
 	local name = props.name or props.Name or props.page or props.Page or props.pagename or props.Pagename or props.PageName or props.pageName or "new ui"
 	-- // variables
