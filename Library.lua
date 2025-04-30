@@ -162,7 +162,7 @@ function library:new(props)
 			BackgroundColor3 = color,
 			BorderColor3 = Color3.fromRGB(12, 12, 12),
 			BorderSizePixel = 1,
-			Size = UDim2.new(0, 750,0,800),
+			Size = UDim2.new(0,750,0,800),
 
 			Position = UDim2.new(0.5,0,0.5,0),
 			Parent = screen
@@ -240,9 +240,8 @@ function library:new(props)
 		if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
 			local delta = input.Position - dragStart
 			outline.Size = UDim2.new(
-				math.clamp(startSize.X.Offset + delta.X, 200, 1500)
-				math.clamp(startSize.Y.Offset + delta.Y, 200, 1500)
-				
+				startSize.X.Scale, math.clamp(startSize.X.Offset + delta.X, 200, 1000), -- min 200, max 1000 width
+				startSize.Y.Scale, math.clamp(startSize.Y.Offset + delta.Y, 200, 1000)  -- min 200, max 1000 height
 			)
 		end
 	end)
