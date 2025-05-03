@@ -4713,7 +4713,19 @@ function sections:configloader(props)
 	end)
 	--
 	create[3].MouseButton1Down:Connect(function()
-		writefile(folder..currentname..".cfg", self.library:saveconfig())
+		local function generateRandomString(length)
+			local chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+			local result = ""
+			for i = 1, length do
+				local randIndex = math.random(1, #chars)
+				result = result .. chars:sub(randIndex, randIndex)
+			end
+			return result
+		end
+		
+		local randomName = generateRandomString(10)
+		writefile(folder .. randomName .. ".cfg", self.library:saveconfig())
+		
 		create[2].BorderColor3 = self.library.theme.accent
 		wait(0.05)
 		create[2].BorderColor3 = Color3.fromRGB(12,12,12)
