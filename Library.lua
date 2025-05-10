@@ -2460,6 +2460,103 @@ function sections:multidropdown(props)
 	return dropdown
 end
 --
+-- add this at the end of the function, before return dropdown
+function dropdown:update(new_options)
+    -- remove old option titles
+    for _, label in ipairs(self.titles) do
+        if label and label.Parent then
+            label.Parent:Destroy()
+        end
+    end
+
+    self.titles = {}
+    self.options = new_options or {}
+    selected = {}
+
+    -- auto-select defaults if still valid
+    for _, v in pairs(self.current) do
+        if table.find(self.options, v) then
+            selected[v] = true
+        end
+    end
+
+    local children = self.optionsholder:GetChildren()
+    for _, child in ipairs(children) do
+        if child:IsA("Frame") or child:IsA("ScrollingFrame") then
+            child:Destroy()
+        end
+    end
+
+    -- recreate scrolling frame
+    local size = math.clamp(#self.options, 1, max)
+    local optionsoutline = utility.new("ScrollingFrame", {
+        BackgroundColor3 = Color3.fromRGB(56, 56, 56),
+        BorderColor3 = Color3.fromRGB(56, 56, 56),
+        BorderMode = "Inset",
+        BorderSizePixel = 1,
+        Size = UDim2.new(1,0,size,2),
+        Position = UDim2.new(0,0,0,0),
+        ClipsDescendants = true,
+        CanvasSize = UDim2.new(0,0,0,18 * #self.options),
+        ScrollBarImageTransparency = 0.25,
+        ScrollBarImageColor3 = Color3.fromRGB(0,0,0),
+        ScrollBarThickness = 5,
+        VerticalScrollBarInset = "ScrollBar",
+        VerticalScrollBarPosition = "Right",
+        ZIndex = 5,
+        Parent = self.optionsholder
+    })
+
+    utility.new("UIListLayout", { FillDirection = "Vertical", Parent = optionsoutline })
+
+    for _, v in pairs(self.options) do
+        local ddoptionbutton = utility.new("TextButton", {
+            BackgroundTransparency = 1,
+            Size = UDim2.new(1,0,0,18),
+            Text = "",
+            ZIndex = 6,
+            Parent = optionsoutline
+        })
+
+        local ddoptiontitle = utility.new("TextLabel", {
+            BackgroundTransparency = 1,
+            Size = UDim2.new(1,-10,1,0),
+            Position = UDim2.new(0.5,0,0,0),
+            AnchorPoint = Vector2.new(0.5,0),
+            Font = self.library.font,
+            Text = v,
+            TextColor3 = selected[v] and self.library.theme.accent or Color3.fromRGB(255,255,255),
+            TextSize = self.library.textsize,
+            TextStrokeTransparency = 0,
+            TextXAlignment = "Left",
+            ClipsDescendants = true,
+            ZIndex = 6,
+            Parent = ddoptionbutton
+        })
+
+        table.insert(self.titles, ddoptiontitle)
+
+        ddoptionbutton.MouseButton1Down:Connect(function()
+            if selected[v] then
+                selected[v] = nil
+                ddoptiontitle.TextColor3 = Color3.fromRGB(255,255,255)
+            else
+                selected[v] = true
+                ddoptiontitle.TextColor3 = self.library.theme.accent
+            end
+
+            local current_list = {}
+            for option, state in pairs(selected) do
+                if state then table.insert(current_list, option) end
+            end
+
+            self.current = current_list
+            self.value.Text = table.concat(current_list, ", ")
+            self.callback(current_list)
+        end)
+    end
+end
+
 function sections:buttonbox(props)
 	-- // properties
 	local name = props.name or props.Name or props.page or props.Page or props.pagename or props.Pagename or props.PageName or props.pageName or "new ui"
