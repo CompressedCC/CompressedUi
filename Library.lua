@@ -2457,11 +2457,8 @@ function sections:multidropdown(props)
 	self.library.labels[#self.library.labels+1] = value
 
 	setmetatable(dropdown, dropdowns)
-	return dropdown
-end
---
--- add this at the end of the function, before return dropdown
-function multidropdown:update(new_options)
+
+	function dropdown:update(new_options)
     -- remove old option titles
     for _, label in ipairs(self.titles) do
         if label and label.Parent then
@@ -2556,6 +2553,11 @@ function multidropdown:update(new_options)
         end)
     end
 end
+	return dropdown
+end
+--
+-- add this at the end of the function, before return dropdown
+
 
 function sections:buttonbox(props)
 	-- // properties
