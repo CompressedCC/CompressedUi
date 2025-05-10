@@ -2461,7 +2461,7 @@ function sections:multidropdown(props)
 end
 --
 -- add this at the end of the function, before return dropdown
-function dropdown:update(new_options)
+function multidropdown:update(new_options)
     -- remove old option titles
     for _, label in ipairs(self.titles) do
         if label and label.Parent then
